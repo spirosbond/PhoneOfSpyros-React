@@ -17,6 +17,7 @@ import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import CssBaseline from '@mui/material/CssBaseline';
 import MenuIcon from '@mui/icons-material/Menu';
+import { shadows } from '@mui/system';
 
 const drawerWidth = 350;
 
@@ -27,7 +28,8 @@ function Sidebar({
                   wireless_charging_value, setWirelessChargingValue, 
                   water_resist_value, setWaterResistValue,
                   android_os_value, setAndroidOsValue,
-                  ios_os_value, setIosOsValue}) {
+                  ios_os_value, setIosOsValue,
+                  brand_value, setBrandValue}) {
   
   // const { window } = props;
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -37,7 +39,7 @@ function Sidebar({
   };
 
 const drawer = (
-    <div>
+    <Box>
       <Toolbar>
         <IconButton
             size="large"
@@ -62,9 +64,11 @@ const drawer = (
                 water_resist_value={water_resist_value} setWaterResistValue={setWaterResistValue}
                 android_os_value={android_os_value} setAndroidOsValue={setAndroidOsValue}
                 ios_os_value={ios_os_value} setIosOsValue={setIosOsValue}
+                brand_value={brand_value} setBrandValue={setBrandValue}
+
       />
       <Divider />
-     </div>
+     </Box>
   );
 
   // const container = window !== undefined ? () => window().document.body : undefined;
@@ -117,7 +121,7 @@ const drawer = (
       </AppBar>
       <Box
         component="nav"
-        sx={{ width: { sm: drawerWidth }, flexShrink: { sm: 0 } }}
+        sx={{ width: { sm: drawerWidth }, flexShrink: { sm: 0 }}}
         aria-label="filters drawer"
       >
         {/* The implementation can be swapped with js to avoid SEO duplication of links. */}
@@ -140,7 +144,7 @@ const drawer = (
           variant="permanent"
           sx={{
             display: { xs: 'none', sm: 'block' },
-            '& .MuiDrawer-paper': { boxSizing: 'border-box', width: drawerWidth, background: "#dcedc8", },
+            '& .MuiDrawer-paper': { boxSizing: 'border-box', width: drawerWidth, background: "#dcedc8", boxShadow: 10 },
           }}
           open
         >

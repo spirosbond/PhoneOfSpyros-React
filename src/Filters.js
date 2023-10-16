@@ -28,6 +28,11 @@ import Radio from '@mui/material/Radio';
 import RadioGroup from '@mui/material/RadioGroup';
 import FormLabel from '@mui/material/FormLabel';
 import Divider from '@mui/material/Divider';
+import InputLabel from '@mui/material/InputLabel';
+import FormControl from '@mui/material/FormControl';
+import Select from '@mui/material/Select';
+import { useState, useEffect } from 'react';
+import axios from 'axios';
 
 function Filters({drawerWidth,
                   ram_value, setRamValue, 
@@ -36,7 +41,9 @@ function Filters({drawerWidth,
                   wireless_charging_value, setWirelessChargingValue, 
                   water_resist_value, setWaterResistValue,
                   android_os_value, setAndroidOsValue,
-                  ios_os_value, setIosOsValue}) {
+                  ios_os_value, setIosOsValue,
+                  brand_value, setBrandValue}) {
+
 
   const ram_slider_change = (event, newValue) => {
     setRamValue(newValue);
@@ -78,6 +85,37 @@ function Filters({drawerWidth,
     setIosOsValue(event.target.checked);
   };
 
+  const [brands, setBrands] = useState([])
+
+  useEffect(() => {
+    axios.get("http://localhost:8080/brand/", {
+                params: {
+                }
+              }
+            )
+      .then((response) => {
+        const temp = []
+        response.data.map((brand, key) => (
+          temp.push(brand.name)
+        ));
+        setBrands(temp)
+      }).catch((e) => {
+        console.log("Error");
+        setBrands([]);
+      });
+    },[])
+
+  const handleBrandChangeMultiple = (event) => {
+    const { options } = event.target;
+    const value: string[] = [];
+    for (let i = 0, l = options.length; i < l; i += 1) {
+      if (options[i].selected) {
+        value.push(options[i].value);
+      }
+    }
+    setBrandValue(value);
+  };
+  
   return (
 	// <Box sx={{ width: 200 }}>
       // <Stack spacing={2} direction="row" sx={{ mb: 1 }} alignItems="center">
@@ -89,7 +127,7 @@ function Filters({drawerWidth,
             <Grid item>
 
             <Typography id="input-slider" gutterBottom>
-              Ram
+              RAM
             </Typography>
             </Grid>
             <Grid item>
@@ -276,6 +314,46 @@ function Filters({drawerWidth,
           </Grid>
         </Box>
       </ListItem>
+    
+      <ListItem key="Brands">
+
+        <Box sx={{ width: drawerWidth }}>
+          <Grid container spacing={2} alignItems="center">
+            <Grid item>
+
+              <FormGroup>
+                <FormLabel id="os-radio-buttons-group-label">Brands</FormLabel>
+                <FormControl sx={{ m: 1, minWidth: 120, maxWidth: 300 }}>
+                  <InputLabel shrink htmlFor="select-brand-multiple-native">
+                    List
+                  </InputLabel>
+                  <Select
+                    multiple
+                    native
+                    value={brand_value}
+                    // @ts-ignore Typings are not considering `native`
+                    onChange={handleBrandChangeMultiple}
+                    label="Native"
+                    inputProps={{
+                      id: 'select-brand-multiple-native',
+                    }}
+                  >
+                    {
+
+                      brands.map((brand) => (
+                      <option key={brand} value={brand}>
+                        {brand}
+                      </option>
+                    ))}
+                  </Select>
+                </FormControl>
+              </FormGroup>
+            </Grid>
+          </Grid>
+        </Box>
+      </ListItem>
+      <Divider />
+
     </List>
 
    	);
